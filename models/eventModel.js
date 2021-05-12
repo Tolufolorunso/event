@@ -4,7 +4,6 @@ const eventSchema = new mongoose.Schema({
   title: {
     type: String,
     required: [true, 'Title is required'],
-    unique: true,
     trim: true,
     min: [4, 'Name is too short!'],
     max: 40,
@@ -16,7 +15,6 @@ const eventSchema = new mongoose.Schema({
   },
   category: {
     type: String,
-    uppercase: false,
     trim: true,
     min: [2, 'Name is too short!'],
     max: 40,
@@ -29,6 +27,11 @@ const eventSchema = new mongoose.Schema({
       'community',
     ],
     default: 'social',
+  },
+  publisher: { type: String },
+  createdAt: {
+    type: Date,
+    default: Date.now,
   },
 })
 

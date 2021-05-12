@@ -1,13 +1,16 @@
-const { findById } = require('../models/eventModel')
 const Event = require('../models/eventModel')
 
+// @desc        Create new event.
+// @route       POST /events
+// @access      Public
 const createEvent = async (req, res) => {
   try {
-    const { title, category, cost } = req.body
-
+    const { title, category, cost, publisher } = req.body
+    console.log(title, category, cost, publisher)
     const event = await Event.create({
       title,
       category,
+      publisher,
       cost: parseFloat(cost),
     })
 
@@ -18,8 +21,6 @@ const createEvent = async (req, res) => {
       },
     })
   } catch (error) {
-    // console.log(error)
-    // console.log(error.message)
     if (error.errors.category.properties.type === 'enum') {
       return res.status(400).json({
         status: 'fail',
@@ -45,6 +46,9 @@ const createEvent = async (req, res) => {
   }
 }
 
+// @desc        Fetch all events.
+// @route       GET /events || /events?category=social
+// @access      Public
 const getAllEvents = async (req, res, next) => {
   try {
     let query = {}
@@ -67,6 +71,9 @@ const getAllEvents = async (req, res, next) => {
   }
 }
 
+// @desc        Fetch single event.
+// @route       GET /events/:eventID
+// @access      Public
 const getEvent = async (req, res, next) => {
   try {
     const ID = req.params.eventID
@@ -90,10 +97,13 @@ const getEvent = async (req, res, next) => {
   }
 }
 
+// @desc        Update event.
+// @route       PUT /events/:eventID
+// @access      Public
 const updateEvent = async (req, res, next) => {
   try {
     const ID = req.params.eventID
-    const event = await Event.findByIdAndUpdate(ID)
+    const event = await Event.findByIdAndUpdate(ID, { ...req.body })
     if (!event) {
       return res.status(404).json({
         status: 'fail',
@@ -103,7 +113,6 @@ const updateEvent = async (req, res, next) => {
     res.status(200).json({
       status: 'success',
       message: 'Event Updated successfully',
-      data: null,
     })
   } catch (error) {
     res.status(500).json({
@@ -114,8 +123,30 @@ const updateEvent = async (req, res, next) => {
   }
 }
 
+// @desc        Delete event.
+// @route       DELETE /events/:eventID
+// @access      Public
 const deleteEvent = async (req, res, next) => {
-  console.log('update event')
+  try {
+    const ID = req.params.eventID
+    const event = await Event.findByIdAndDelete(ID)
+    if (!event) {
+      return res.status(404).json({
+        status: 'fail',
+        errormessage: 'Event not found',
+      })
+    }
+    res.status(200).json({
+      status: 'success',
+      message: 'Event deleted successfully',
+    })
+  } catch (error) {
+    res.status(500).json({
+      status: 'fail',
+      errormessage: 'Error occurred',
+      data: error.message,
+    })
+  }
 }
 
 module.exports = {

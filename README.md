@@ -24,7 +24,7 @@ command.
 ### Clone
 
 - Clone this repo to your local machine using
-  `https://github.com/Tolufolorunso/introduction-rest-api.git`
+  `https://github.com/Tolufolorunso/event.git`
 
 ### The HTTP verbs used
 
@@ -72,7 +72,8 @@ command.
 {
     "title": "tolulope's wedding",
     "category": "social",
-    "cost": 4050
+    "cost": 4050,
+    "publisher": "Tolulope"
 }
 
 ```
@@ -86,7 +87,8 @@ command.
 {
     "title": "Seyi ogunjuyigbe's wedding",
     "category": "social",
-    "cost": 4566
+    "cost": 4566,
+    "publisher": "Tolulope"
 }
 
 ```

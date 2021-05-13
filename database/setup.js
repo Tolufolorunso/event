@@ -1,11 +1,11 @@
 const mongoose = require('mongoose')
 
 // const DB = process.env.DATABASE_LOCAL
-const DBString = 'mongodb://localhost:27017/eventDB'
+const DB = process.env.DATABASE
 
 module.exports = () => {
   mongoose
-    .connect(DBString, {
+    .connect(DB, {
       useNewUrlParser: true,
       useCreateIndex: true,
       useUnifiedTopology: true,

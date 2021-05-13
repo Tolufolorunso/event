@@ -21,14 +21,7 @@ const createEvent = async (req, res) => {
       },
     })
   } catch (error) {
-    if (error.errors.category.properties.type === 'enum') {
-      return res.status(400).json({
-        status: 'fail',
-        data: {
-          errorMessage: error.message,
-        },
-      })
-    }
+    console.log(error.message)
     if (error.code === 11000) {
       return res.status(400).json({
         status: 'fail',
@@ -40,7 +33,7 @@ const createEvent = async (req, res) => {
     return res.status(500).json({
       status: 'fail',
       data: {
-        errorMessage: 'Server Error, try again',
+        errorMessage: error.message,
       },
     })
   }

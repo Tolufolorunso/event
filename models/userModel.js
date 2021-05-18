@@ -4,17 +4,17 @@ const userSchema = new mongoose.Schema(
   {
     firstname: {
       type: String,
-      required: [true, 'Firstname field is required'],
+      required: [true, 'Please provide firstname'],
       trim: true
     },
     lastname: {
       type: String,
-      required: [true, 'Lastname field is required'],
+      required: [true, 'Please provide lastname'],
       trim: true
     },
     email: {
       type: String,
-      required: [true, 'Username field is required'],
+      required: [true, 'Please provide password'],
       unique: true,
       lowercase: true,
       trim: true,
@@ -26,6 +26,12 @@ const userSchema = new mongoose.Schema(
       trim: true,
       min: [2, 'Charaters is too short!'],
       max: 20
+    },
+    role: {
+      type: String,
+      required: true,
+      enum: ['regular', 'admin'],
+      default: 'regular'
     }
   },
   { timestamps: true }

@@ -6,35 +6,34 @@ const Event = require('../models/eventModel')
 const createEvent = async (req, res) => {
   try {
     const { title, category, cost, publisher } = req.body
-    console.log(title, category, cost, publisher)
     const event = await Event.create({
       title,
       category,
-      publisher,
-      cost: parseFloat(cost),
+      publisher: `${req.user.firstname} ${req.user.lastname}`,
+      publisherID: req.user._id,
+      cost: parseFloat(cost)
     })
 
     res.status(201).json({
       status: 'success',
       data: {
-        event,
-      },
+        event
+      }
     })
   } catch (error) {
-    console.log(error.message)
     if (error.code === 11000) {
       return res.status(400).json({
         status: 'fail',
         data: {
-          errorMessage: 'Event already exists',
-        },
+          errorMessage: 'Event already exists'
+        }
       })
     }
     return res.status(500).json({
       status: 'fail',
       data: {
-        errorMessage: error.message,
-      },
+        errorMessage: error.message
+      }
     })
   }
 }
@@ -49,17 +48,17 @@ const getAllEvents = async (req, res, next) => {
       query.category = req.query.category
     }
     const events = await Event.find(query)
-    res.status(200).json({
+    return res.status(200).json({
       status: 'success',
       result: events.length,
       data: {
-        events,
-      },
+        events
+      }
     })
   } catch (error) {
-    res.status(500).json({
+    return res.status(500).json({
       status: 'fail',
-      errormessage: 'Error occurred',
+      errormessage: 'Error occurred'
     })
   }
 }
@@ -74,18 +73,18 @@ const getEvent = async (req, res, next) => {
     if (!event) {
       return res.status(404).json({
         status: 'fail',
-        errormessage: 'Event not found',
+        errormessage: 'Event not found'
       })
     }
     res.status(200).json({
       status: 'success',
-      data: event,
+      data: event
     })
   } catch (error) {
     res.status(500).json({
       status: 'fail',
       errormessage: 'Error occurred',
-      data: error,
+      data: error
     })
   }
 }
@@ -100,18 +99,18 @@ const updateEvent = async (req, res, next) => {
     if (!event) {
       return res.status(404).json({
         status: 'fail',
-        errormessage: 'Event not found',
+        errormessage: 'Event not found'
       })
     }
     res.status(200).json({
       status: 'success',
-      message: 'Event Updated successfully',
+      message: 'Event Updated successfully'
     })
   } catch (error) {
     res.status(500).json({
       status: 'fail',
       errormessage: 'Error occurred',
-      data: error,
+      data: error
     })
   }
 }
@@ -126,18 +125,18 @@ const deleteEvent = async (req, res, next) => {
     if (!event) {
       return res.status(404).json({
         status: 'fail',
-        errormessage: 'Event not found',
+        errormessage: 'Event not found'
       })
     }
     res.status(200).json({
       status: 'success',
-      message: 'Event deleted successfully',
+      message: 'Event deleted successfully'
     })
   } catch (error) {
     res.status(500).json({
       status: 'fail',
       errormessage: 'Error occurred',
-      data: error.message,
+      data: error.message
     })
   }
 }
@@ -147,5 +146,5 @@ module.exports = {
   getAllEvents,
   getEvent,
   updateEvent,
-  deleteEvent,
+  deleteEvent
 }

@@ -35,7 +35,75 @@ command.
 - PUT: To Update resources
 - DELETE: To Update resources
 
-## Handling all the four routes
+## Handling all routes
+
+## Handling unhandle routes
+
+```
+app.all("*", (req, res, next) => {
+   return res.status(404).json({
+      status: 'fail',
+      detail: {
+        message: `Routes not found. Can't find ${req.originalUrl} on this server`,
+      }
+    })
+});
+
+```
+
+## Authentication and Authorization
+
+- Create one Admin by uncomment // require('./seeder/createAdmin').createAdmin()
+  in app.js file
+- The password to use is 'thankyouseyiogunjuyigbe'
+
+- For new User to register
+
+```
+//Endpoint is
+
+/api/v1/users/register
+{
+    "firstname": "tolulope",
+    "lastname": "folorunso",
+    "email": "tolu@reskillamericans.org",
+    "password": "password"
+}
+
+-Response is
+-status code is 201 created
+
+{
+    "status": "success",
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYwYTQzYzJhYzExYjg1MDA2ODUyYzg0NSIsInVzZXJuYW1lIjoidG9sdWZvbG9ydW5zbyIsImZpcnN0bmFtZSI6InRvbHVsb3BlIiwibGFzdG5hbWUiOiJmb2xvcnVuc28iLCJpYXQiOjE2MjEzNzYwNDIsImV4cCI6MTYyMTM3OTY0Mn0.kKswaNRv1PzcEpdmf8EF66F0DWEBk2DffKVOhfBUmVo"
+}
+```
+
+- For login
+
+```
+//Endpoint is
+
+/api/v1/users/login
+{
+    "email": "tolufolorunso",
+    "password": "password"
+}
+
+-Response is
+-status code is 200 Ok
+
+{
+    "status": "success",
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYwYTQzYzJhYzExYjg1MDA2ODUyYzg0NSIsInVzZXJuYW1lIjoidG9sdWZvbG9ydW5zbyIsImZpcnN0bmFtZSI6InRvbHVsb3BlIiwibGFzdG5hbWUiOiJmb2xvcnVuc28iLCJpYXQiOjE2MjEzNzYxMjksImV4cCI6MTYyMTM3OTcyOX0.AQCnipDBOwMS96LG_0h-4W7yO9nPkbKaBa6cs7P2qRs",
+    "user": {
+        "id": "60a43c2ac11b85006852c845",
+        "email": "tolu@reskillamericans.org",
+        "firstname": "tolulope",
+        "lastname": "folorunso"
+    }
+}
+```
 
 ### Get All Events Using HTTP GET Method
 
@@ -102,54 +170,4 @@ command.
 
 /api/v1/events/:eventID
 
-```
-
-## Authentication
-
-- For new User to register
-
-```
-//Endpoint is
-
-/api/v1/users/register
-{
-    "firstname": "tolulope",
-    "lastname": "folorunso",
-    "email": "tolu@reskillamericans.org",
-    "password": "password"
-}
-
--Response is
--status code is 201 created
-
-{
-    "status": "success",
-    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYwYTQzYzJhYzExYjg1MDA2ODUyYzg0NSIsInVzZXJuYW1lIjoidG9sdWZvbG9ydW5zbyIsImZpcnN0bmFtZSI6InRvbHVsb3BlIiwibGFzdG5hbWUiOiJmb2xvcnVuc28iLCJpYXQiOjE2MjEzNzYwNDIsImV4cCI6MTYyMTM3OTY0Mn0.kKswaNRv1PzcEpdmf8EF66F0DWEBk2DffKVOhfBUmVo"
-}
-```
-
-- For login
-
-```
-//Endpoint is
-
-/api/v1/users/login
-{
-    "email": "tolufolorunso",
-    "password": "password"
-}
-
--Response is
--status code is 200 Ok
-
-{
-    "status": "success",
-    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYwYTQzYzJhYzExYjg1MDA2ODUyYzg0NSIsInVzZXJuYW1lIjoidG9sdWZvbG9ydW5zbyIsImZpcnN0bmFtZSI6InRvbHVsb3BlIiwibGFzdG5hbWUiOiJmb2xvcnVuc28iLCJpYXQiOjE2MjEzNzYxMjksImV4cCI6MTYyMTM3OTcyOX0.AQCnipDBOwMS96LG_0h-4W7yO9nPkbKaBa6cs7P2qRs",
-    "user": {
-        "id": "60a43c2ac11b85006852c845",
-        "email": "tolu@reskillamericans.org",
-        "firstname": "tolulope",
-        "lastname": "folorunso"
-    }
-}
 ```

@@ -12,7 +12,8 @@ const expiry = 3600
 // @access      Public
 
 const register = (req, res) => {
-  const { firstname, lastname, email, password } = req.body
+  let { firstname, lastname, email, password } = req.body
+  password = password.toLowerCase()
 
   if (validate({ firstname, lastname, email, password, res })) {
     return
@@ -37,8 +38,6 @@ const register = (req, res) => {
     }
     User.create({ firstname, lastname, email }, (error, newUser) => {
       if (error) {
-        console.log('eorrr', error)
-
         return res.status(500).json({
           status: 'fail',
           detail: {
@@ -95,8 +94,8 @@ const register = (req, res) => {
 // @access      Public
 
 const login = (req, res) => {
-  const { email, password } = req.body
-
+  let { email, password } = req.body
+  password = password.toLowerCase()
   if (!email || !password) {
     return res.status(400).json({
       status: 'fail',

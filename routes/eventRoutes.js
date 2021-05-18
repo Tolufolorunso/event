@@ -6,10 +6,18 @@ const {
   getAllEvents,
   getEvent,
   updateEvent,
-  deleteEvent,
+  deleteEvent
 } = require('../controllers/eventControllers')
+const { authenticateUser, isAdmin } = require('../middlewares/authenticate')
 
-router.route('/').post(createEvent).get(getAllEvents)
-router.route('/:eventID').get(getEvent).put(updateEvent).delete(deleteEvent)
+router
+  .route('/')
+  .post(authenticateUser, createEvent)
+  .get(authenticateUser, getAllEvents)
+router
+  .route('/:eventID')
+  .get(authenticateUser, getEvent)
+  .put(authenticateUser, isAdmin, updateEvent)
+  .delete(authenticateUser, isAdmin, deleteEvent)
 
 module.exports = router

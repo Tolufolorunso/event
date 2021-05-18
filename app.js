@@ -30,6 +30,20 @@ app.get('/', (req, res) => {
   })
 })
 
+//Handling unhandle routes
+
+app.all('*', (req, res, next) => {
+  return res.status(404).json({
+    status: 'fail',
+    detail: {
+      message: `Routes not found. Can't find ${req.originalUrl} with HTTP ${req.method} method on this server`
+    }
+  })
+})
+
+// creation of admin account. uncomment to create one
+// require('./seeder/createAdmin').createAdmin()
+
 // Connect DB
 require('./database/setup')()
 

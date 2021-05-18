@@ -7,13 +7,13 @@ const eventSchema = new mongoose.Schema(
       required: [true, 'Title is required'],
       trim: true,
       min: [4, 'Name is too short!'],
-      max: 40,
+      max: 40
     },
     cost: {
       type: Number,
       required: [true, 'Cost is required'],
       trim: true,
-      min: [1, 'Cost must be greater than zero'],
+      min: [1, 'Cost must be greater than zero']
     },
     category: {
       type: String,
@@ -21,9 +21,14 @@ const eventSchema = new mongoose.Schema(
       min: [2, 'Name is too short!'],
       max: 40,
       enum: ['business', 'casual', 'party', 'general'],
-      default: 'general',
+      default: 'general'
     },
-    publisher: { type: String },
+    publisherID: {
+      type: mongoose.Schema.ObjectId,
+      ref: 'User',
+      required: true
+    },
+    publisher: { type: String }
   },
   { timestamps: true }
 )

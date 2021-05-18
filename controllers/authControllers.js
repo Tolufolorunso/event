@@ -2,6 +2,8 @@ const User = require('../models/userModel')
 const jwt = require('jsonwebtoken')
 const bcrypt = require('bcryptjs')
 
+const { validate } = require('../helperfunctions/validate')
+
 const secret = 'yyyjydfghgtrey'
 const expiry = 3600
 
@@ -10,18 +12,13 @@ const expiry = 3600
 // @access      Public
 
 const register = (req, res) => {
-  const { firstname, lastname, username, password } = req.body
+  const { firstname, lastname, email, password } = req.body
 
-  if (!username || !password || !firstname || !lastname) {
-    return res.status(400).json({
-      status: 'fail',
-      detail: {
-        message: 'All field is required'
-      }
-    })
+  if (validate({ firstname, lastname, email, password, res })) {
+    return
   }
 
-  User.findOne({ username }, (error, userExists) => {
+  User.findOne({ email }, (error, userExists) => {
     if (error) {
       return res.status(500).json({
         status: 'fail',
@@ -34,11 +31,11 @@ const register = (req, res) => {
       return res.status(400).json({
         status: 'fail',
         detail: {
-          error: 'username taken'
+          error: 'email taken'
         }
       })
     }
-    User.create({ firstname, lastname, username }, (error, newUser) => {
+    User.create({ firstname, lastname, email }, (error, newUser) => {
       if (error) {
         console.log('eorrr', error)
 
@@ -59,7 +56,7 @@ const register = (req, res) => {
             jwt.sign(
               {
                 id: savedUser._id,
-                username: savedUser.username,
+                email: savedUser.email,
                 firstname: savedUser.firstname,
                 lastname: savedUser.lastname
               },
@@ -98,18 +95,18 @@ const register = (req, res) => {
 // @access      Public
 
 const login = (req, res) => {
-  const { username, password } = req.body
+  const { email, password } = req.body
 
-  if (!username || !password) {
+  if (!email || !password) {
     return res.status(400).json({
       status: 'fail',
       detail: {
-        message: 'Please enter username and password'
+        message: 'Please enter both email and password'
       }
     })
   }
 
-  User.findOne({ username }, (error, foundUser) => {
+  User.findOne({ email }, (error, foundUser) => {
     if (error) {
       return res.status(500).json({
         status: 'fail',
@@ -122,7 +119,7 @@ const login = (req, res) => {
       return res.status(401).json({
         status: 'fail',
         detail: {
-          message: 'Incorrect username or password'
+          message: 'Incorrect email or password'
         }
       })
     }
@@ -131,13 +128,13 @@ const login = (req, res) => {
       return res.status(401).json({
         status: 'fail',
         detail: {
-          message: 'Incorrect username or password'
+          message: 'Incorrect email or password'
         }
       })
     }
     const user = {
       id: foundUser._id,
-      username: foundUser.username,
+      email: foundUser.email,
       firstname: foundUser.firstname,
       lastname: foundUser.lastname
     }

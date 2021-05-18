@@ -12,13 +12,13 @@ const userSchema = new mongoose.Schema(
       required: [true, 'Lastname field is required'],
       trim: true
     },
-    username: {
+    email: {
       type: String,
       required: [true, 'Username field is required'],
       unique: true,
       lowercase: true,
       trim: true,
-      min: [2, 'username charaters is too short!'],
+      min: [2, 'email is too short!'],
       max: 20
     },
     password: {

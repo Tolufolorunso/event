@@ -1,3 +1,5 @@
+# Note: This is a task given by ReskillAmericans training. Building and improving it according to instructors instruction. Thanks
+
 ## Getting Started
 
 These instructions will get you a copy of the project up and running on your
@@ -113,7 +115,7 @@ command.
 {
     "firstname": "tolulope",
     "lastname": "folorunso",
-    "username": "tolufolorunso",
+    "email": "tolu@reskillamericans.org",
     "password": "password"
 }
 
@@ -133,7 +135,7 @@ command.
 
 /api/v1/users/login
 {
-    "username": "tolufolorunso",
+    "email": "tolufolorunso",
     "password": "password"
 }
 
@@ -145,7 +147,7 @@ command.
     "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYwYTQzYzJhYzExYjg1MDA2ODUyYzg0NSIsInVzZXJuYW1lIjoidG9sdWZvbG9ydW5zbyIsImZpcnN0bmFtZSI6InRvbHVsb3BlIiwibGFzdG5hbWUiOiJmb2xvcnVuc28iLCJpYXQiOjE2MjEzNzYxMjksImV4cCI6MTYyMTM3OTcyOX0.AQCnipDBOwMS96LG_0h-4W7yO9nPkbKaBa6cs7P2qRs",
     "user": {
         "id": "60a43c2ac11b85006852c845",
-        "username": "tolufolorunso",
+        "email": "tolu@reskillamericans.org",
         "firstname": "tolulope",
         "lastname": "folorunso"
     }

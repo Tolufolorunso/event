@@ -4,7 +4,7 @@ const dotenv = require('dotenv')
 const cors = require('cors')
 
 dotenv.config({
-  path: './config.env',
+  path: './config.env'
 })
 
 const app = express()
@@ -17,15 +17,16 @@ if (process.env.NODE_ENV === 'development') {
   app.use(morgan('dev'))
 }
 
-app.use('/events', require('./routes/eventRoutes'))
+app.use('/api/v1/events', require('./routes/eventRoutes'))
+app.use('/api/v1/users', require('./routes/authRoutes'))
 
 app.get('/', (req, res) => {
   res.status(200).json({
     message: 'success',
     data: {
       name: 'Folorunso Tolulope',
-      message: 'Welcome Home, Reskillamerica',
-    },
+      message: 'Welcome Home, Reskillamerica'
+    }
   })
 })
 

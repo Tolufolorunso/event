@@ -40,7 +40,7 @@ command.
 ```
 // Endpoint is
 
- /events
+ /api/v1/events
 
 ```
 
@@ -49,7 +49,7 @@ command.
 ```
 // Endpoint is
 
- /events?category=social
+ /api/v1/events?category=social
 
 ```
 
@@ -58,7 +58,7 @@ command.
 ```
 //Endpoint is
 
-/events/:eventID
+/api/v1/events/:eventID
 
 ```
 
@@ -67,7 +67,7 @@ command.
 ```
 //Endpoint is
 
-/Events
+/api/v1/events
 
 {
     "title": "tolulope's wedding",
@@ -83,7 +83,7 @@ command.
 ```
 //Endpoint is
 
-/events/:eventID
+/api/v1/events/:eventID
 {
     "title": "Seyi ogunjuyigbe's wedding",
     "category": "social",
@@ -98,6 +98,56 @@ command.
 ```
 //Endpoint is
 
-/events/:eventID
+/api/v1/events/:eventID
 
+```
+
+## Authentication
+
+- For new User to register
+
+```
+//Endpoint is
+
+/api/v1/users/register
+{
+    "firstname": "tolulope",
+    "lastname": "folorunso",
+    "username": "tolufolorunso",
+    "password": "password"
+}
+
+-Response is
+-status code is 201 created
+
+{
+    "status": "success",
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYwYTQzYzJhYzExYjg1MDA2ODUyYzg0NSIsInVzZXJuYW1lIjoidG9sdWZvbG9ydW5zbyIsImZpcnN0bmFtZSI6InRvbHVsb3BlIiwibGFzdG5hbWUiOiJmb2xvcnVuc28iLCJpYXQiOjE2MjEzNzYwNDIsImV4cCI6MTYyMTM3OTY0Mn0.kKswaNRv1PzcEpdmf8EF66F0DWEBk2DffKVOhfBUmVo"
+}
+```
+
+- For login
+
+```
+//Endpoint is
+
+/api/v1/users/login
+{
+    "username": "tolufolorunso",
+    "password": "password"
+}
+
+-Response is
+-status code is 200 Ok
+
+{
+    "status": "success",
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYwYTQzYzJhYzExYjg1MDA2ODUyYzg0NSIsInVzZXJuYW1lIjoidG9sdWZvbG9ydW5zbyIsImZpcnN0bmFtZSI6InRvbHVsb3BlIiwibGFzdG5hbWUiOiJmb2xvcnVuc28iLCJpYXQiOjE2MjEzNzYxMjksImV4cCI6MTYyMTM3OTcyOX0.AQCnipDBOwMS96LG_0h-4W7yO9nPkbKaBa6cs7P2qRs",
+    "user": {
+        "id": "60a43c2ac11b85006852c845",
+        "username": "tolufolorunso",
+        "firstname": "tolulope",
+        "lastname": "folorunso"
+    }
+}
 ```

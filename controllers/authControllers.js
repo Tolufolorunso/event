@@ -13,6 +13,7 @@ const expiry = 3600
 
 const register = (req, res) => {
   let { firstname, lastname, email, password } = req.body
+
   password = password.toLowerCase()
 
   if (validate({ firstname, lastname, email, password, res })) {
@@ -21,10 +22,15 @@ const register = (req, res) => {
 
   User.findOne({ email }, (error, userExists) => {
     if (error) {
+      console.log(
+        '🚀 ~ file: authControllers.js ~ line 25 ~ User.findOne ~ error',
+        error
+      )
+
       return res.status(500).json({
         status: 'fail',
         detail: {
-          error
+          error: error
         }
       })
     }
@@ -38,6 +44,11 @@ const register = (req, res) => {
     }
     User.create({ firstname, lastname, email }, (error, newUser) => {
       if (error) {
+        console.log(
+          '🚀 ~ file: authControllers.js ~ line 43 ~ User.create ~ error',
+          error
+        )
+
         return res.status(500).json({
           status: 'fail',
           detail: {

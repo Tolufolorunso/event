@@ -23,7 +23,10 @@ const authenticateUser = (req, res, next) => {
   jwt.verify(token, secret, (error, decodedToken) => {
     if (error) {
       return res.status(500).json({
-        error
+        status: 'fail',
+        detail: {
+          message: 'You are not login, please log in'
+        }
       })
     }
     // if (!decodedToken) {

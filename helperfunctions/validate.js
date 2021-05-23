@@ -1,41 +1,29 @@
+const sendRes = (data, res) => {
+  res.status(400).json({
+    status: 'fail',
+    detail: {
+      errorMessage: data
+    }
+  })
+}
 const validate = ({ firstname, lastname, email, password, res }) => {
   if (!password) {
-    res.status(400).json({
-      message: 'fail',
-      data: {
-        message: 'Password field required'
-      }
-    })
+    sendRes('Password field required', res)
     return true
   }
 
   if (!email) {
-    res.status(400).json({
-      message: 'fail',
-      data: {
-        message: 'Email field required'
-      }
-    })
+    sendRes('Email field required', res)
     return true
   }
 
   if (!firstname) {
-    res.status(400).json({
-      message: 'fail',
-      data: {
-        message: 'Firstname field required'
-      }
-    })
+    sendRes('Firstname field required', res)
     return true
   }
 
   if (!lastname) {
-    res.status(400).json({
-      message: 'fail',
-      data: {
-        message: 'Lastname field required'
-      }
-    })
+    sendRes('Lastname field required', res)
     return true
   }
 
@@ -43,35 +31,19 @@ const validate = ({ firstname, lastname, email, password, res }) => {
   const letters = /^[A-Za-z]+$/
 
   if (!email.match(emailFormat)) {
-    res.status(400).json({
-      message: 'fail',
-      data: {
-        message: 'Invalid email'
-      }
-    })
+    sendRes('Invalid email', res)
     return true
   }
 
   if (!firstname.match(letters)) {
-    res.status(400).json({
-      message: 'fail',
-      data: {
-        message: 'Invalid firstname'
-      }
-    })
+    sendRes('Invalid firstname', res)
     return true
   }
 
   if (!lastname.match(letters)) {
-    res.status(400).json({
-      message: 'fail',
-      data: {
-        message: 'Invalid lastname'
-      }
-    })
+    sendRes('Invalid lastname', res)
     return true
   }
-
   return false
 }
 

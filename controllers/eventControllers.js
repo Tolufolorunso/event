@@ -1,14 +1,24 @@
 const Event = require('../models/eventModel')
+const { api: splashAPI } = require('../helperfunctions/api')
+const { sendRes } = require('../helperfunctions/sendRes')
 
 // @desc        Create new event.
 // @route       POST /events
 // @access      Public
 const createEvent = async (req, res) => {
   try {
-    const { title, category, cost, publisher } = req.body
+    const { title, category, cost } = req.body
+    const fetchedImageUrl = await splashAPI(
+      `https://imagegen.herokuapp.com/?category${category}`
+    )
+
+    if (!fetchedImageUrl.status) {
+      return sendRes('error', 'Fail to fetch image', res, 400)
+    }
     const event = await Event.create({
       title,
       category,
+      photoURI: fetchedImageUrl.image,
       publisher: `${req.user.firstname} ${req.user.lastname}`,
       publisherID: req.user._id,
       cost: parseFloat(cost)
@@ -21,20 +31,7 @@ const createEvent = async (req, res) => {
       }
     })
   } catch (error) {
-    if (error.code === 11000) {
-      return res.status(400).json({
-        status: 'fail',
-        data: {
-          errorMessage: 'Event already exists'
-        }
-      })
-    }
-    return res.status(500).json({
-      status: 'fail',
-      data: {
-        errorMessage: error.message
-      }
-    })
+    sendRes('error', error, res, 500)
   }
 }
 
@@ -56,10 +53,7 @@ const getAllEvents = async (req, res, next) => {
       }
     })
   } catch (error) {
-    return res.status(500).json({
-      status: 'fail',
-      errormessage: 'Error occurred'
-    })
+    sendRes('error', error.message, res, 500)
   }
 }
 
@@ -81,11 +75,7 @@ const getEvent = async (req, res, next) => {
       data: event
     })
   } catch (error) {
-    res.status(500).json({
-      status: 'fail',
-      errormessage: 'Error occurred',
-      data: error
-    })
+    sendRes('error', error.message, res, 500)
   }
 }
 
@@ -107,11 +97,7 @@ const updateEvent = async (req, res, next) => {
       message: 'Event Updated successfully'
     })
   } catch (error) {
-    res.status(500).json({
-      status: 'fail',
-      errormessage: 'Error occurred',
-      data: error
-    })
+    sendRes('error', error.message, res, 500)
   }
 }
 
@@ -133,11 +119,7 @@ const deleteEvent = async (req, res, next) => {
       message: 'Event deleted successfully'
     })
   } catch (error) {
-    res.status(500).json({
-      status: 'fail',
-      errormessage: 'Error occurred',
-      data: error.message
-    })
+    sendRes('error', error.message, res, 500)
   }
 }
 

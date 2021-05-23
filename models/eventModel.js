@@ -23,6 +23,9 @@ const eventSchema = new mongoose.Schema(
       enum: ['business', 'casual', 'party', 'general'],
       default: 'general'
     },
+    photoURI: {
+      type: String
+    },
     publisherID: {
       type: mongoose.Schema.ObjectId,
       ref: 'User',

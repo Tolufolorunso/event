@@ -4,160 +4,101 @@ const bcrypt = require('bcryptjs')
 
 const { validate } = require('../helperfunctions/validate')
 
-const secret = 'yyyjydfghgtrey'
-const expiry = 3600
+const sendRes = (isSuccess, data, res, statusCode) => {
+  if (isSuccess === 'error') {
+    res.status(statusCode).json({
+      status: 'fail',
+      detail: {
+        errorMessage: data
+      }
+    })
+  } else {
+    res.status(statusCode).json({
+      status: 'success',
+      token: data.token,
+      data: {
+        user: data.user
+      }
+    })
+  }
+}
 
 // @desc        SignUp user.
 // @route       POST /api/v1/users/register
 // @access      Public
 
-const register = (req, res) => {
+const register = async (req, res) => {
   let { firstname, lastname, email, password } = req.body
-
-  password = password.toLowerCase()
 
   if (validate({ firstname, lastname, email, password, res })) {
     return
   }
+  password = password.toLowerCase()
 
-  User.findOne({ email }, (error, userExists) => {
-    if (error) {
-      console.log(
-        '🚀 ~ file: authControllers.js ~ line 25 ~ User.findOne ~ error',
-        error
-      )
-
-      return res.status(500).json({
-        status: 'fail',
-        detail: {
-          error: error
-        }
-      })
+  try {
+    const user = await User.findOne({ email })
+    if (user) {
+      return sendRes('error', 'email taken', res, 400)
     }
-    if (userExists) {
-      return res.status(400).json({
-        status: 'fail',
-        detail: {
-          error: 'email taken'
-        }
-      })
-    }
-    User.create({ firstname, lastname, email }, (error, newUser) => {
-      if (error) {
-        console.log(
-          '🚀 ~ file: authControllers.js ~ line 43 ~ User.create ~ error',
-          error
-        )
 
-        return res.status(500).json({
-          status: 'fail',
-          detail: {
-            error
-          }
-        })
+    password = await bcrypt.hash(password, 10)
+
+    const newUser = await User.create({ firstname, lastname, email, password })
+    const token = jwt.sign(
+      {
+        id: newUser._id,
+        fullname: `${newUser.firstname} ${newUser.lastname}`
+      },
+      process.env.JWT_SECRET,
+      {
+        expiresIn: process.env.JWT_EXPIRES_IN
       }
-
-      bcrypt
-        .hash(password, 10)
-        .then((hashedPassword) => {
-          newUser.password = hashedPassword
-          newUser.save((error, savedUser) => {
-            if (error) return res.status(500).json({ error })
-            jwt.sign(
-              {
-                id: savedUser._id,
-                email: savedUser.email,
-                firstname: savedUser.firstname,
-                lastname: savedUser.lastname
-              },
-              secret,
-              { expiresIn: expiry },
-              (error, token) => {
-                if (error) {
-                  return res.status(500).json({
-                    status: 'fail',
-                    error
-                  })
-                } else {
-                  return res.status(201).json({
-                    status: 'success',
-                    token
-                  })
-                }
-              }
-            )
-          })
-        })
-        .catch((error) => {
-          return res.status(500).json({
-            status: 'fail',
-            detail: {
-              error
-            }
-          })
-        })
+    )
+    return res.status(201).json({
+      status: 'success',
+      token
     })
-  })
+  } catch (error) {
+    return sendRes('error', error.message, res, 500)
+  }
 }
 
 // @desc        Login user.
 // @route       POST /api/v1/users/login
 // @access      Public
 
-const login = (req, res) => {
+const login = async (req, res) => {
   let { email, password } = req.body
-  password = password.toLowerCase()
   if (!email || !password) {
-    return res.status(400).json({
-      status: 'fail',
-      detail: {
-        message: 'Please enter both email and password'
-      }
-    })
+    return sendRes('error', 'Please enter both email and password', res, 401)
   }
 
-  User.findOne({ email }, (error, foundUser) => {
-    if (error) {
-      return res.status(500).json({
-        status: 'fail',
-        detail: {
-          error
-        }
-      })
+  password = password.toLowerCase()
+
+  try {
+    const user = await User.findOne({ email })
+    if (!user) {
+      return sendRes('error', 'Incorrect email or password', res, 400)
     }
-    if (!foundUser) {
-      return res.status(401).json({
-        status: 'fail',
-        detail: {
-          message: 'Incorrect email or password'
-        }
-      })
-    }
-    const isPasswordMatch = bcrypt.compareSync(password, foundUser.password)
+    const isPasswordMatch = await bcrypt.compare(password, user.password)
     if (!isPasswordMatch) {
-      return res.status(401).json({
-        status: 'fail',
-        detail: {
-          message: 'Incorrect email or password'
-        }
-      })
+      return sendRes('error', 'Incorrect email or password', res, 400)
     }
-    const user = {
-      id: foundUser._id,
-      email: foundUser.email,
-      firstname: foundUser.firstname,
-      lastname: foundUser.lastname
+
+    const userPayload = {
+      id: user._id,
+      fullname: `${user.firstname} ${user.lastname}`
     }
-    const token = jwt.sign(user, secret, {
-      expiresIn: expiry
+
+    const token = jwt.sign(userPayload, process.env.JWT_SECRET, {
+      expiresIn: process.env.JWT_EXPIRES_IN
     })
-    res.status(200).json({
-      status: 'success',
-      token,
-      user
-    })
-  })
+    sendRes('success', { token, user }, res, 200)
+  } catch (error) {
+    sendRes('error', error.message, res, 500)
+  }
 }
+
 module.exports = {
   register,
   login
